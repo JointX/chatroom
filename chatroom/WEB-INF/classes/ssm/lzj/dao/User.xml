@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ssm.lzj.dao.User">
+ <!--一些有管  parameterType和resultType的总结：
+ parameterType：最好是po的包装对象。
+ resultType：最好是po的扩展对象。
+ 那么以后修改po对象本身对，包装对象和扩展对象都相应的更新，而特有的地方不受影响。
+ -->
+ <!--对于sql语句的一些总结：
+ 1.最好将sql语句片段分离：
+   -->
+   	<sql id="forFindAllItems">
+   		<if test="extendsItem!=null">
+   			<if test="extendsItem.item_id!=null">
+   				where item_id=#{extendsItem.item_id}
+   			</if>
+   		</if>
+   	</sql>
+   	<sql id="forUpdateItemById">
+   		<if test="extendsItem!=null">
+   			<if test="extendsItem.item_id!=null">
+   				 item_id=#{extendsItem.item_id},
+   				 price=#{extendsItem.price},
+   				 location=#{extendsItem.location},
+   				 description=#{extendsItem.description},
+   				 createtime=#{extendsItem.createtime} 
+   				 WHERE item_id=#{extendsItem.item_id}
+   			</if>
+   		</if>
+   	</sql>
+   	<sql id="forAddItem">
+   		<if test="extendsItem!=null">
+   			(#{extendsItem.price},#{extendsItem.location},#{extendsItem.description},#{extendsItem.createtime})
+   		</if>
+   	</sql>
+   	
+	<select id="findAllItems" parameterType="ssm.lzj.pojo.WrappedItem" resultType="ssm.lzj.pojo.ExtendsItem">
+  		SELECT * FROM item
+ 		<include refid="forFindAllItems"/>
+	</select>
+	<update id="updateItemById" parameterType="ssm.lzj.pojo.WrappedItem">
+		UPDATE item SET
+		<include refid="forUpdateItemById"/>
+	</update>
+	<insert id="addItem" parameterType="ssm.lzj.pojo.WrappedItem">
+	INSERT INTO item(price,location,description,createtime) VALUES
+	<include refid="forAddItem"/>
+	</insert>
+	
+</mapper>
