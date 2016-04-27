@@ -1,42 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
-   <!-- 对Spring容器进行实例化 -->	
-	<listener>
-		<!--由这个监听器的处理器，实现将spring 容器实例化的。  -->
-		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-	</listener>
-	<context-param>
-		<!-- 这个是监听器需要的需要资源路径， classpath加这个是代表在类路径下，不加则是当前web应用根目录。-->
-		<param-name>contextConfigLocation</param-name>
-		<!--通过通配符来加载 所有spring容器有关的配置文件-->
-		<param-value>classpath:config/spring/app*.xml</param-value>
-	</context-param>
-	<filter>
-		<filter-name>encodingFilter</filter-name>
-		<filter-class>ssm.lzj.filter.EncodingFilter</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>encodingFilter</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
-	
-   <servlet>
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>classpath:config/spring/app*.xml</param-value>
+  </context-param>
+  <filter>
+    <filter-name>encodingFilter</filter-name>
+    <filter-class>ssm.lzj.filter.EncodingFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>encodingFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <servlet>
     <servlet-name>springDispatcher</servlet-name>
-    <!-- DispatcherServlet的前台的核心转发器 -->
     <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-  
-  	<!--这个参数加载springmvc配置文件，包括处理器映射器，处理器适配器，视图解析器，自定义处理器URL的映射等等。  -->
-  	<init-param>
-  		<param-name>contextConfigLocation</param-name>
-  		<param-value>classpath:config/springmvc.xml</param-value>
-  	</init-param>
-  	
-  	  <!--配置加载的优先级  -->
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>classpath:config/springmvc.xml</param-value>
+    </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>
     <servlet-name>springDispatcher</servlet-name>
-    <!--对于url映射：*.action,dispatcher只针对符合规则的请求进行解析。/* 对于一些静态的页面，也去解析，那么不符合我们的需求-->
     <url-pattern>*.action</url-pattern>
   </servlet-mapping>
 </web-app>

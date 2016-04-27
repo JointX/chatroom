@@ -17,27 +17,22 @@
 		http://www.springframework.org/schema/context/spring-context-3.1.xsd">
 		
 		
-		<!--配置我们自定义的处理业务的Handler____________________________________________________-->
-			<bean id="myHandler" name="/myHandler.action" class="ssm.lzj.handler.MyHandler"></bean>
-			<bean id="myHandler3" name="/myHandler3.action" class="ssm.lzj.handler.MyHandler1"></bean>
-			<!-- <bean class="ssm.lzj.handler.MyHandler2"></bean> -->
-			<!--由于考虑到自己配置自定义的处理器手动注入太过繁琐，springmvc框架为我们提供了自动包扫描注入  -->
 			<context:component-scan base-package="ssm.lzj.handler"></context:component-scan>
 		
-		<!--配置框架要使用的处理器映射器 _________________________________________________________ -->
+			<!--配置框架要使用的处理器映射器 _________________________________________________________ -->
 			<!--第一种非注解的处理器映射器  BeanNameUrlHandlerMapping,用法是寻找我们配置的Handler的name属性-->
 			<bean class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping"></bean>
 			<!--第二种非注解的处理器映射器,SimpleUrlHandlerMapping，这样可以把我们的Handler集中管理，它是用id来映射我们
 				自定义的handler.
 			  -->
-			<bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+			<!-- <bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
 				<property name="mappings">
 					<props>
 						<prop key="/myHandler1.action">myHandler</prop>
 						<prop key="/myHandler2.action">myHandler</prop>
 					</props>
 				</property>
-			</bean>
+			</bean> -->
 			<!--第一种注解的处理器映射器，spring3.1之前，org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping.class  -->
 			<!--第二种注解的处理器映射器， org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping.class -->
 			<!-- mvc:annotation-driven<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"></bean> -->
@@ -113,7 +108,7 @@
 		<!--配置静态资源映射，当使用RestFul风格的URL的时候，前端控制去DispatcherServlet的映射需要为/,那么一些静态资源
 		也会被当作action来解析，那么静态资源将无法访问，所以需要在springmvc中做一个映射，也可以在web.xml文件中单个映射。
 		  -->
-		  <mvc:resources location="/WEB-INF/jsp/login.jsp" mapping="login"/>
+		<!--   <mvc:resources location="/WEB-INF/jsp/login.jsp" mapping="login"/> -->
 		  
 		  <!--配置拦截器，拦截器也是处理器适配器器的组件，我们使用注解驱动注入的适配器，没法注入，可以使用标签来注入自定义的拦截器  -->
 		  <mvc:interceptors>

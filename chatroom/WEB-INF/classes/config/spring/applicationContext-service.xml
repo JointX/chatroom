@@ -13,6 +13,4 @@
 		http://www.springframework.org/schema/tx 
 		http://www.springframework.org/schema/tx/spring-tx-3.1.xsd ">
 	<!--我们手动的去注入service实现类 ，配置文件与spring容器的主配置文件分离，方便管理-->
-	<bean id="serviceFindItemImpl" class="ssm.lzj.service.impl.ServiceFindItemImpl"></bean>
-
 </beans>
