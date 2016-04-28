@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!--通过properties标签来加载外部配置文件，将一些可能被多个xml文件共享加载的配置文件分离出来 -->
+	<!--resource是配置类路径下配置文件，url是本地路径下的配置文件 ,虽然properties内部也可以配置信息，但一般不要配置 -->
+<!-- 	<properties resource="db.properties"></properties> -->
+	
+	<!--一些全局配置信息 -->
+	 <settings>
+	 	<!--开启懒加载 ,默认为false-->
+	 	<setting name="lazyLoadingEnabled" value="true"/>
+	 	<!-- 开启积极加载，默认是true，需要设为false,懒加载才有意义 -->
+	 	<setting name="aggressiveLazyLoading" value="false"/>
+	 	<!--开启二级缓存，默认是false，这个是mybatis框架的总开关，具体到各个mapper也有各自的分开关控制，整合
+	 	其它框架的二级缓存，也需要开启这个开关
+	 	-->
+	 <setting name="cacheEnabled" value="true"/>	
+	 </settings> 
+	
+	
+	<!--  <typeAliases>
+	 	<package name="mybatis.lzj.domain" />//对整个包下所有类取别名，默认是类名，首字母和大写或小写。
+	 	<typeAlias type="mybatis.lzj.domain.User" alias="user"/>//对单个类取别名
+	 </typeAliases> -->
+	 
+	<!-- 和spring整合后 environments配置将废除 -->
+	<!-- <environments default="development">
+		<environment id="development">
+			<transactionManager type="JDBC" />
+			<dataSource type="POOLED">
+				<property name="driver" value="${jdbc.driver}"/>
+				<property name="url" value="${jdbc.url}"/>
+				<property name="username" value="${jdbc.username}"/>
+				<property name="password" value="${jdbc.password}"/>
+			</dataSource>
+		</environment>
+	</environments>
+ -->
+	<!-- 加载映射文件 -->
+	<mappers>
+		<!--第一种通过类路径  -->
+		<!-- 	<mapper resource="config/mybatis/item.xml" /> -->
+		<!--第二种通过本地路径-->
+		<!-- <mapper url=""/> -->
+		<!--第三种通过类和包批量加载 ,-->
+		<!--用类名加载映射mapper,mapper.xml文件和接口放在同类路径下，mapper.xml名称需要和接口类名称相同，调用接口方法，也需要mybatis动态代理，规范  -->
+		<!-- <mapper class="mybatis.lzj.service.Service4Mybatis"/> -->
+		<!--用包的批量加载，则需要所有的mapper.xml文件都遵循命名规范  -->
+		<package name="ssm.lzj.dao"/>
+	</mappers>
+</configuration>

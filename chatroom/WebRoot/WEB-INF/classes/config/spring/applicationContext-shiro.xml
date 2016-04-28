@@ -1,0 +1,64 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-3.1.xsd 
+		http://www.springframework.org/schema/mvc 
+		http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd 
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-3.1.xsd 
+		http://www.springframework.org/schema/aop 
+		http://www.springframework.org/schema/aop/spring-aop-3.1.xsd 
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+		http://www.springframework.org/schema/util
+        http://www.springframework.org/schema/util/spring-util-3.1.xsd">
+
+	<!--login是sampleRealm的一个依赖字段，自动扫描包注入有点问题，所以手动注入 -->
+	<bean id="login" class="ssm.lzj.handler.Login"></bean>
+	<bean id="sampleRealm" class="ssm.lzj.shiro.SampleRealm"></bean> 
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">  
+    <!-- 这里的sampleRealm需要我们自己实现，主要包括2个方法  
+	1.  用户登录的验证（授权）  
+	2.  用户具有的角色和权限（认证） 且看下面介绍   -->
+    <property name="realm" ref="sampleRealm"/>  
+    </bean>  
+  
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>  
+  	<!--自定义角色过滤器， 功能支持多个角色可以访问同一个资源 eg:/home.jsp = authc,roleOR[admin,user]  用户有admin或者user角色 就可以访问   -->
+     <bean id="roleOR" class="ssm.lzj.filter.OneRoleAuthorizationFilter"/>  
+     <!--配置拦截器组，其实就是一组过滤器链 ，每个都有不同的作用 -->
+     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">  
+        <property name="securityManager" ref="securityManager"/>  
+        <property name="loginUrl" value="/toLogin.action"/>  
+        <property name="successUrl" value="/WEB-INF/jsp/index.jsp"/>  
+        <property name="unauthorizedUrl" value="/register/unauthorized"/>  
+        <property name="filters"> 
+            <util:map>  
+                <entry key="authc">  
+                    <bean class="org.apache.shiro.web.filter.authc.PassThruAuthenticationFilter"/>  
+                </entry>  
+            </util:map>  
+        </property>  
+        <property name="filterChainDefinitions">  
+            <value>  
+                /toLogin.action = anon<!--anon不需要登录便可以访问的资源  -->  
+                /login.action=anon<!--登录页面和转到登录url不需要登录就可以访问 -->
+                /WEB-INF/jsp/login.jsp=anon
+                /WEB-INF/jsp/register/* = anon  
+                /** = authc 
+                <!--authc不登录会跳转到相应的登录页面，/**表示当前应用下的任何url
+               	 失败会跳转到这里<property name="loginUrl" value="/toLogin.action"/> 
+                -->  
+                /WEB-INF/jsp/addItem* = authc,roles[数据管理员]  
+                /WEB-INF/jsp/file* = authc,roleOR[数据管理员,普通用户]  
+                /WEB-INF/jsp/listItems* = authc,roleOR[数据管理员,普通用户]                  
+                /WEB-INF/jsp/showItem* = authc,roleOR[数据管理员,普通用户]  
+                /WEB-INF/jsp/updateItem*=authc,roles[数据管理员]  
+            </value>  
+        </property> 
+    </bean>
+    <!--开启注解的方式来权限控制 ,需要在springmvc配置文件中配置-->
+</beans>

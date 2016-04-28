@@ -1,1 +1,0 @@
-该项目使用的api:shiro做登录权限控制,spring4.25容器整合springmvc和mybatis做核心业务，mysql做数据库，ehcache做缓存，tomcat做web容器，eginx服务器做集群，activemq做队列消息的转发，HTML5做前端页面展示。

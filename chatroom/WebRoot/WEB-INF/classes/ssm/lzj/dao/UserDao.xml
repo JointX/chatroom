@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ssm.lzj.dao.UserDao">
+ <!--一些有管  parameterType和resultType的总结：
+ parameterType：最好是po的包装对象。
+ resultType：最好是po的扩展对象。
+ 那么以后修改po对象本身对，包装对象和扩展对象都相应的更新，而特有的地方不受影响。
+ -->
+ <!--对于sql语句的一些总结：
+ 1.最好将sql语句片段分离：
+   -->
+   	<sql id="forQuery">
+   		<if test="user!=null">
+   			<if test="user.uid!=null">
+   				where user.u_id=#{user.uid}
+   			</if>
+   		</if>
+   	</sql>
+   	<sql id="forUpdate">
+   		<if test="user!=null">
+ 			user.u_id=#{user.uid},user.username=#{user.username},user.password=#{user.password} where user.u_id=#{user.uid}  		
+   		</if>
+   	</sql>
+   	<sql id="forAdd">
+   		<if test="user!=null">
+  			(#{user.uid},#{user.username},#{user.password},#{user.email})
+   		</if>
+   	</sql>
+	<select id="query" parameterType="ssm.lzj.pojo.WrappedUser" resultType="ssm.lzj.pojo.WrappedUser">
+  		SELECT * FROM user
+ 		<include refid="forQuery"/>
+	</select>
+	<update id="update" parameterType="ssm.lzj.pojo.WrappedUser">
+		UPDATE user SET 
+		<include refid="forUpdate"/>
+	</update>
+	<insert id="add" parameterType="ssm.lzj.pojo.WrappedUser">
+	INSERT INTO user(u_id,username,password,email) VALUES
+	<include refid="forAdd"/>
+	</insert>
+	
+</mapper>
